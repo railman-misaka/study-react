@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from '../app/page.module.css'
 
-export default function Headline(props: { title?: string, page?: string }) {
+export function Headline(props: { title?: string, page?: string }) {
   console.log(props.title);
   return (
     <div>
