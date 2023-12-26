@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import styles from './page.module.css'
-import { Footer } from '../components/Footer'
+import styles from '../page.module.css'
+import { Footer } from '@/components/Footer'
 import Headline from '@/components/Headline'
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
     <div>
     <main className={styles.main}>
       <div className={styles.description}>
-        <Headline page='page'/>
+        <Headline page="about"/>
         <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
