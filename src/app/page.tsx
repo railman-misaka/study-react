@@ -2,13 +2,14 @@
 import { Header } from "@/src/components/Header";
 import { Main } from "@/src/components/Main";
 import { Footer } from "@/src/components/Footer";
-import { useCallback, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const handleClick = useCallback((e: any) => {
-    e.preventDefault();
-    alert(123);
-  }, []);
+  const [foo, setFoo] = useState(1);
+
+  const handleClick = (e: any) => {
+    setFoo((foo) => foo + 1);
+  };
 
   useEffect(() => {
     //ここからマウント処理
@@ -23,9 +24,8 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <a href="/about" onClick={handleClick}>
-        ボタン
-      </a>
+      <h1>{foo}</h1>
+      <button onClick={handleClick}>ボタン</button>
       <Main page="index" />
 
       <Footer />
