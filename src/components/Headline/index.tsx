@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../app/page.module.css";
+import styles from "@/src/app/page.module.css";
 
 export function Headline(props: {
   children?: React.ReactNode;
