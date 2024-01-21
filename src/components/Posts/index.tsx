@@ -1,8 +1,5 @@
 "use client";
-import { Header } from "@/src/components/Header";
-import { Posts } from "@/src/components/Posts";
-import { Footer } from "@/src/components/Footer";
-import { useBgLighBlue } from "@/src/hooks/useBgLighBlue";
+import React from "react";
 import { useEffect, useCallback, useState } from "react";
 
 type Post = {
@@ -12,16 +9,14 @@ type Post = {
   userId: number;
 };
 
-export default function Home() {
-  useBgLighBlue();
-
+export const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   const getPosts = useCallback(async () => {
     try {
-      const res = await fetch("https://jsonplaceholder.typicode.com/postsa");
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
       if (!res.ok) {
         throw new Error("エラーが発生したため、データの取得に失敗しました。");
       }
@@ -41,11 +36,17 @@ export default function Home() {
     getPosts();
   }, [getPosts]);
 
+  if (loading) return <div>ローディング中</div>;
+
+  if (error) return <div>{error.message}</div>;
+
+  if (posts.length === 0) return <div>データは空です</div>;
+
   return (
-    <div>
-      <Header />
-      <Posts />
-      <Footer />
-    </div>
+    <ol>
+      {posts.map((post) => {
+        return <li key={post.id}>{post.title}</li>;
+      })}
+    </ol>
   );
-}
+};
