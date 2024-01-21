@@ -1,5 +1,6 @@
 {
   "files.autoSave": "off",
   "editor.tabSize": 2,
-  "javascript.preferences.importModuleSpecifier": "non-relative"
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "editor.formatOnSave": true
 }
