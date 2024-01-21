@@ -5,11 +5,32 @@ import { Footer } from "@/src/components/Footer";
 import { useCounter } from "@/src/hooks/useCounter";
 import { useInputArray } from "@/src/hooks/useInputArray";
 import { useBgLighBlue } from "@/src/hooks/useBgLighBlue";
+import { useEffect, useCallback, useState } from "react";
 
-export default function Home() {
+type Post = {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
+};
+
+export default function Home(props: { foo: number }) {
+  console.log(props);
   const { foo, isShow, handleClick, handleDisplay } = useCounter();
   const { text, array, handleChanged, handleAdd } = useInputArray();
   useBgLighBlue();
+
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  const getPosts = useCallback(async () => {
+    const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const json = await res.json();
+    setPosts(json);
+  }, []);
+
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
 
   return (
     <div>
@@ -28,6 +49,12 @@ export default function Home() {
       </ul>
 
       <Main page="index" />
+
+      <ol>
+        {posts.map((post) => {
+          return <li key={post.id}>{post.title}</li>;
+        })}
+      </ol>
 
       <Footer />
     </div>
