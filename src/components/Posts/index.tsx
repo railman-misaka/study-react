@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useReducer } from "react";
 
 type Post = {
   id: number;
@@ -9,10 +9,36 @@ type Post = {
   userId: number;
 };
 
+const initialState = {
+  data: [] as Post[],
+  loading: true,
+  error: null as Error | null,
+};
+
+const reducer = (state: typeof initialState, action: any) => {
+  switch (action.type) {
+    case "end":
+      return {
+        ...state,
+        data: action.data,
+        loading: false,
+      };
+    case "error":
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    default:
+      throw new Error("no such action type");
+  }
+};
+
 export const Posts = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  // const [posts, setPosts] = useState<Post[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<Error | null>(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const getPosts = useCallback(async () => {
     try {
@@ -21,30 +47,32 @@ export const Posts = () => {
         throw new Error("エラーが発生したため、データの取得に失敗しました。");
       }
       const json = await res.json();
-      setPosts(json);
+      dispatch({ type: "end", data: json });
     } catch (error) {
       if (error instanceof Error) {
-        setError(error);
+        dispatch({ type: "error", error });
       } else {
-        setError(new Error("An unknown error occurred."));
+        dispatch({
+          type: "error",
+          error: new Error("An unknown error occurred."),
+        });
       }
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
     getPosts();
   }, [getPosts]);
 
-  if (loading) return <div>ローディング中</div>;
+  if (state.loading) return <div>ローディング中</div>;
 
-  if (error) return <div>{error.message}</div>;
+  if (state.error) return <div>{state.error.message}</div>;
 
-  if (posts.length === 0) return <div>データは空です</div>;
+  if (state.data.length === 0) return <div>データは空です</div>;
 
   return (
     <ol>
-      {posts.map((post) => {
+      {state.data.map((post: any) => {
         return <li key={post.id}>{post.title}</li>;
       })}
     </ol>
